@@ -41,8 +41,8 @@ export HF_ENDPOINT=https://hf-mirror.com
 # 下载到 ~/projects/clip-demo/images/（可以改成自己的路径）
 hf download nlphuji/flickr30k --repo-type=dataset --local-dir ~/projects/clip-demo/images//flickr30k
 ```
-从该数据集中随机挑选出20张图片放在images文件夹下作为测试图片
-从数据集的评论中随机抽取30条不重复的作为文本候选集。
+从该数据集中随机挑选出20张图片放在images文件夹下作为测试图片，
+从数据集的评论中随机抽取30条不重复的作为文本候选集，加上自己对某个图片的一个精准评价（以验证模型确实能将该文本与图片匹配）。
 
 ### 运行实例
 ```bash
@@ -96,5 +96,36 @@ similarities = np.dot(text_features, image_features)
 ## 📊 实验结果示例
 ### 以文搜图
 输入文本：“A man holding a fish”
+
 输出结果：
 <img width="1553" height="414" alt="image" src="https://github.com/user-attachments/assets/ae72bfbe-833e-4e45-8703-8008156e54fd" />
+
+### 以图搜文
+输入图片：<img width="915" height="693" alt="image" src="https://github.com/user-attachments/assets/ca5844dc-afb2-4a69-91f4-5e2cf3660293" />
+
+输出结果：
+
+  1. A man with a white hat and sunglasses holding a fish. (相似度: 0.3234)
+     
+  2. Two young men are having good time. (相似度: 0.1977)
+     
+  3. A man with glasses holds a small dark-haired child. (相似度: 0.1880)
+     
+  4. A boy is kayaking on a river. (相似度: 0.1870)
+     
+  5. A person in a cowboy hat rides a tan horse. (相似度: 0.1723)
+
+## 🔍 对多模态学习的思考
+通过该项目，我对多模态学习有了更深的理解：
+1. 多模态学习是指利用来自不同模态，如文本、图像、音频、视频、传感器数据等）信息，通过模型学习它们之间的关联与互补性，完成联合推理或生成任务。常见的应用有图文检索、视觉问答、跨模态生成、情感分析、医疗诊断等场景。
+   
+2.CLIP的核心原理：CLIP的核心是一个双塔结构，由一个图像编码器（如ViT或ResNet）和一个文本编码器（如Transformer）构成，分别将图像和文本映射到同一特征空间。采用对比训练的方式，通过4亿图文对训练，拉近匹配的图文对，推远不匹配的对，这种对比损失使得模型能够理解图文之间的语义关联。
+
+3.零样本学习的能力：CLIP的强大之处在于它将视觉概念与语言描述直接关联，无需针对特定任务微调，即可实现零样本分类和检索。
+
+4. 未来探索方向：我关注到袁粒老师在视觉Transformer方面的工作有VOLO、T2T-ViT,这些工作改进了ViT对细粒度特征的建模能力，将这种改进应用于多模态任务如CLIP的视觉编码器，可能进一步提升图文检索的精度。
+
+## 📚 参考资料
+1. CLIP原始论文  
+2. HuggingFace CLIP文档
+3. 袁粒老师代表作：VOLO, T2T-ViT
