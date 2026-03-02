@@ -6,7 +6,7 @@
 
 ## 📝 项目简介
 
-本项目基于 OpenAI 的 **CLIP** 模型（Contrastive Language-Image Pre-training），实现了一个轻量级的**多模态图文检索系统**。CLIP 通过对比学习将图像和文本映射到同一个向量空间，使得跨模态相似度计算成为可能[citation:1][citation:8]。
+本项目基于 OpenAI 的 **CLIP** 模型（Contrastive Language-Image Pre-training），实现了一个轻量级的**多模态图文检索系统**。CLIP 通过对比学习将图像和文本映射到同一个向量空间，使得跨模态相似度计算成为可能。
 
 **核心功能**：
 - 🖼️ **以图搜文**：输入图片，返回最匹配的文本描述
@@ -103,17 +103,13 @@ similarities = np.dot(text_features, image_features)
 输入图片：<img width="915" height="693" alt="image" src="https://github.com/user-attachments/assets/ca5844dc-afb2-4a69-91f4-5e2cf3660293" />
 
 输出结果：
-
-  1. A man with a white hat and sunglasses holding a fish. (相似度: 0.3234)
-     
-  2. Two young men are having good time. (相似度: 0.1977)
-     
-  3. A man with glasses holds a small dark-haired child. (相似度: 0.1880)
-     
-  4. A boy is kayaking on a river. (相似度: 0.1870)
-     
+```bash
+  1. A man with a white hat and sunglasses holding a fish. (相似度: 0.3234)     
+  2. Two young men are having good time. (相似度: 0.1977)   
+  3. A man with glasses holds a small dark-haired child. (相似度: 0.1880)   
+  4. A boy is kayaking on a river. (相似度: 0.1870)   
   5. A person in a cowboy hat rides a tan horse. (相似度: 0.1723)
-
+```
 
 ## 模型性能探索
 为了进一步了解clip模型的性能，我在使用CLIP进行图文检索时，简单设计了三组对比实验：空间关系测试、细粒度类别区分、物体部件识别测试。结果发现，CLIP对‘左边/右边’的区分能力弱，对细粒度品种差异较敏感，对物体部件识别能力一般。
@@ -129,18 +125,16 @@ similarities = np.dot(text_features, image_features)
 
 ### 综合分析
 CLIP在细粒度类别区分上表现尚可，但在空间关系理解和部件识别上存在明显不足。这说明：
-
-CLIP的视觉编码器（ViT/ResNet）擅长捕捉全局语义和类别特征，但对局部空间结构和细粒度细节的建模能力有限。
-
-其训练目标为图文全局匹配，导致模型倾向于学习“图像整体”与“文本整体”的关联，而忽略了图像内部的局部关系。
+1. CLIP的视觉编码器（ViT/ResNet）擅长捕捉全局语义和类别特征，但对局部空间结构和细粒度细节的建模能力有限。
+2. 其训练目标为图文全局匹配，导致模型倾向于学习“图像整体”与“文本整体”的关联，而忽略了图像内部的局部关系。
  
 ## 🔍 对多模态学习的思考
 通过该项目，我对多模态学习有了更深的理解：
 1. 多模态学习是指利用来自不同模态，如文本、图像、音频、视频、传感器数据等）信息，通过模型学习它们之间的关联与互补性，完成联合推理或生成任务。常见的应用有图文检索、视觉问答、跨模态生成、情感分析、医疗诊断等场景。
    
-2.CLIP的核心原理：CLIP的核心是一个双塔结构，由一个图像编码器（如ViT或ResNet）和一个文本编码器（如Transformer）构成，分别将图像和文本映射到同一特征空间。采用对比训练的方式，通过4亿图文对训练，拉近匹配的图文对，推远不匹配的对，这种对比损失使得模型能够理解图文之间的语义关联。
+2. CLIP的核心原理：CLIP的核心是一个双塔结构，由一个图像编码器（如ViT或ResNet）和一个文本编码器（如Transformer）构成，分别将图像和文本映射到同一特征空间。采用对比训练的方式，通过4亿图文对训练，拉近匹配的图文对，推远不匹配的对，这种对比损失使得模型能够理解图文之间的语义关联。
 
-3.零样本学习的能力：CLIP的强大之处在于它将视觉概念与语言描述直接关联，无需针对特定任务微调，即可实现零样本分类和检索。
+3. 零样本学习的能力：CLIP的强大之处在于它将视觉概念与语言描述直接关联，无需针对特定任务微调，即可实现零样本分类和检索。
 
 4. 未来探索方向：我关注到clip模型在空间关系理解和部件识别上存在明显不足，而袁粒老师的VOLO论文正是针对这一问题：VOLO通过Outlook注意力机制显式建模局部细粒度特征，能够更好地捕捉图像中的边缘、纹理、部件等局部结构。因此或许将VOLO引入CLIP的视觉编码器，能增强模型对空间关系的感知，提升对物体部件的识别能力，在不损失全局语义的前提下，补充局部细节信息，从而改善图文匹配的准确性。。
 
